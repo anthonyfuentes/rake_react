@@ -4,10 +4,10 @@ module React
 
     attr_reader :name, :has_props, :is_stateful
 
-    def initialize(args)
+    def initialize(args = {})
       @name = args.fetch(:name, nil)
-      @has_props = args[:props] == 'f' ? false : true
-      @is_stateful = args[:state] == 'f' ? false : true
+      @has_props = args.fetch(:props, true)
+      @is_stateful = args.fetch(:state, false)
     end
 
     def generate_scaffolding
@@ -30,9 +30,10 @@ module React
     end
 
     def imports
-      if is_stateful
-        "import React from 'react'"
-      end
+      imports = ""
+      imports += "import React from 'react'"
+      imports += "\nimport PropTypes from 'prop-types'" if has_props
+      imports
     end
 
     def component_declaration
@@ -51,7 +52,7 @@ module React
 
     def stateless_declaration
       "const #{name} = (props) => {\n\n"\
-        "#{render_declaration}\n"\
+        "#{return_declaration}\n"\
         "}"
     end
 
@@ -59,6 +60,12 @@ module React
       "  render() {\n"\
         "    // TODO\n"\
         "  }"
+    end
+
+    def return_declaration
+      "  return (\n"\
+        "    // TODO\n"\
+        "  )"
     end
 
     def prop_types
